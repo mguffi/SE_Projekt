@@ -1,0 +1,43 @@
+
+
+sudo apt update
+
+sudo apt install -y mysql-server
+
+sudo service mysql start
+
+sudo mysql
+
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'deinPasswort';
+
+FLUSH PRIVILEGES;
+
+EXIT;
+
+-- Neu Anmelden
+
+mysql -u root -i
+
+--Database anlegen
+
+create datebase name;
+
+CREATE TABLE users (
+
+id INT AUTO_INCREMENT PRIMARY KEY,
+
+username VARCHAR(50) NOT NULL UNIQUE,
+
+password VARCHAR(255), -- Optional, falls du das Klartext-Passwort aus Debug-Zwecken speichern willst
+
+password_hash VARCHAR(255) NOT NULL
+
+);
+
+INSERT INTO users (username, password_hash,password)
+
+VALUES ('admin', '$2a$10$wHfFDN06uO/z5x.vQ4nHFeJDwYeC/nvXlxIcGJPSqzOybjNkt5uU2','admin');
+
+exit;
+
+sudo service mysql start

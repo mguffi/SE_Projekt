@@ -4,12 +4,13 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// Neue Zeile: express-session einbinden
+var session = require('express-session');
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-//var searchRouter = require('./routes/search');
-//var profilRouter = require('./routes/profil');
-//var filterRouter = require('./routes/filter');
-
+// Wir fügen einen neuen Router für Authentifizierung hinzu:
+var authRouter = require('./routes/auth');
 
 var app = express();
 
@@ -23,11 +24,19 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Session-Middleware konfigurieren
+app.use(session({
+  secret: 'dein geheimer Schlüssel', // bitte durch einen sicheren Wert ersetzen
+  resave: false,
+  saveUninitialized: true,
+}));
+
+// Routen registrieren
 app.use('/', indexRouter);
+// Falls du User-spezifische Funktionen hast:
 app.use('/users', usersRouter);
-//app.use('/profil', profilRouter);
-//app.use('/search', searchRouter);
-//app.use('./filter', filterRouter);
+// Unser neuer Authentifizierungs-Router (für Login, Signup, Logout)
+app.use('/', authRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

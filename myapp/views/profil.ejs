@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Profil</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .profile-container { max-width: 400px; margin: 20px auto; text-align: center; }
+    .profile-container img { max-width: 200px; border-radius: 50%; }
+  </style>
+</head>
+<body>
+  <div class="profile-container">
+    <h1>Profilseite</h1>
+    <img src="<%= user.image_url %>" alt="Profilbild">
+    <p><strong>Name:</strong> <%= user.name %></p>
+    <p><strong>Geburtstag:</strong> <%= user.birthday %></p>
+    <p><strong>Geschlecht:</strong> <%= user.gender %></p>
+    <a href="/logout">Logout</a>
+  </div>
+</body>
+</html>

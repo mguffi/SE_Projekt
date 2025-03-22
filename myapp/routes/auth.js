@@ -1,57 +1,46 @@
 // routes/auth.js
-var express = require('express');
-var router = express.Router();
-
-// Simulierter Benutzerspeicher (in Produktion: Datenbank!)
-let users = [];
-
-/* GET Login-Seite */
-router.get('/login', (req, res) => {
-  res.render('login');
-});
-
-/* POST Login-Daten verarbeiten */
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  let user = users.find(u => u.username === username && u.password === password);
-
-  if (user) {
-    req.session.user = user;
-    res.redirect('/');
-  } else {
-    res.send('Falscher Benutzername oder Passwort.');
+  try {
+    const [rows] = await pool.execute('SELECT * FROM user WHERE name = ?', [username]);
+    if (rows.length > 0) {
+      const user = rows[0];
+      // Passwort überprüfen (bcrypt vergleicht den eingegebenen Wert mit dem gespeicherten Hash)
+      const match = await bcrypt.compare(password, user.password_hash);
+      if (match) {
+        // Benutzer in der Session speichern
+        req.session.user = user;
+        // Erfolgreicher Login: Weiterleitung zur Profilseite
+        return res.redirect('/profil');
+      }
+    }
+    // Falls Login fehlschlägt, wird eine Fehlermeldung angezeigt
+    res.render('login', { error: 'Falscher Benutzername oder Passwort' });
+  } catch (err) {
+    console.error(err);
+    res.render('login', { error: 'Interner Fehler' });
   }
 });
-
-/* GET Registrierungsseite */
-router.get('/signup', (req, res) => {
-  res.render('signup');
-});
-
-/* POST Registrierungsdaten verarbeiten */
-router.post('/signup', (req, res) => {
+// routes/auth.js
+router.post('/login', async (req, res) => {
   const { username, password } = req.body;
-
-  // Überprüfen, ob der Benutzername schon existiert
-  if (users.find(u => u.username === username)) {
-    return res.send('Benutzername bereits vergeben. Bitte wähle einen anderen.');
+  try {
+    const [rows] = await pool.execute('SELECT * FROM user WHERE name = ?', [username]);
+    if (rows.length > 0) {
+      const user = rows[0];
+      // Passwort überprüfen (bcrypt vergleicht den eingegebenen Wert mit dem gespeicherten Hash)
+      const match = await bcrypt.compare(password, user.password_hash);
+      if (match) {
+        // Benutzer in der Session speichern
+        req.session.user = user;
+        // Erfolgreicher Login: Weiterleitung zur Profilseite
+        return res.redirect('/profil');
+      }
+    }
+    // Falls Login fehlschlägt, wird eine Fehlermeldung angezeigt
+    res.render('login', { error: 'Falscher Benutzername oder Passwort' });
+  } catch (err) {
+    console.error(err);
+    res.render('login', { error: 'Interner Fehler' });
   }
-  
-  // Neuen Benutzer erstellen (in der Realität: Passwort hashen!)
-  let newUser = { id: users.length + 1, username, password };
-  users.push(newUser);
-  
-  // Benutzer in der Session speichern
-  req.session.user = newUser;
-  res.redirect('/');
 });
-
-/* Logout: Session zerstören */
-router.get('/logout', (req, res) => {
-  req.session.destroy(err => {
-    if (err) return res.send('Fehler beim Logout.');
-    res.redirect('/login');
-  });
-});
-
-module.exports = router;

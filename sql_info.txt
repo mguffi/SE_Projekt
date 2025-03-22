@@ -22,6 +22,16 @@ mysql -u root -i
 
 create datebase name;
 
+CREATE TABLE user (
+  id INT NOT NULL AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL,
+  gender ENUM('male','female') NOT NULL,
+  birthday DATE NOT NULL,
+  image_url VARCHAR(500),
+  password_hash VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  PRIMARY KEY (id)
+);
 CREATE TABLE users (
 
 id INT AUTO_INCREMENT PRIMARY KEY,

@@ -2,19 +2,34 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Registrierung</title>
+  <title>Signup</title>
 </head>
 <body>
-  <h1>Registrierung</h1>
-  <form action="/signup" method="POST">
+  <h1>Signup</h1>
+  <% if (error) { %>
+    <p style="color: red;"><%= error %></p>
+  <% } %>
+  <form action="/signup" method="post">
     <label>Benutzername:</label>
     <input type="text" name="username" required>
     <br>
     <label>Passwort:</label>
     <input type="password" name="password" required>
     <br>
-    <button type="submit">Registrieren</button>
+    <label>Geschlecht:</label>
+    <select name="gender">
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+    <br>
+    <label>Geburtstag:</label>
+    <input type="date" name="birthday" required>
+    <br>
+    <label>Profilbild URL:</label>
+    <input type="text" name="image_url" required>
+    <br>
+    <button type="submit">Signup</button>
   </form>
-  <p>Bereits registriert? <a href="/login">Hier anmelden</a></p>
+  <p>Bereits registriert? <a href="/login">Login</a></p>
 </body>
 </html>

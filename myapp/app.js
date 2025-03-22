@@ -3,14 +3,14 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
-// Neue Zeile: express-session einbinden
 var session = require('express-session');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-// Wir fügen einen neuen Router für Authentifizierung hinzu:
+// Neuer Router für Authentifizierung (Login, Signup, Logout)
 var authRouter = require('./routes/auth');
+// Router für die Profilseite
+var profilRouter = require('./routes/profil');
 
 var app = express();
 
@@ -21,6 +21,10 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Direkt den Profil-Router einbinden, falls der Aufruf schon hier erfolgen soll
+app.use('/profil', profilRouter);
+
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -33,9 +37,7 @@ app.use(session({
 
 // Routen registrieren
 app.use('/', indexRouter);
-// Falls du User-spezifische Funktionen hast:
 app.use('/users', usersRouter);
-// Unser neuer Authentifizierungs-Router (für Login, Signup, Logout)
 app.use('/', authRouter);
 
 // catch 404 and forward to error handler

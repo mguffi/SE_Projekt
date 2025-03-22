@@ -1,11 +1,61 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tinder-Style Startseite</title>
+  <style>
+    /* Basis-Reset und Styling */
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f0f0f0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      text-align: center;
+      background: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 400px;
+    }
+    .logo {
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      color: #ff5864; /* Tinder-ähnliche Akzentfarbe */
+    }
+    .btn {
+      display: inline-block;
+      margin: 10px;
+      padding: 12px 24px;
+      font-size: 1rem;
+      text-decoration: none;
+      color: #fff;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+    .btn-login {
+      background: #00c1b3;
+    }
+    .btn-signup {
+      background: #ff5864;
+    }
+    .btn:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">My Tinder App</div>
+    <a href="/login" class="btn btn-login">Login</a>
+    <a href="/signup" class="btn btn-signup">Signup</a>
+  </div>
+</body>
 </html>

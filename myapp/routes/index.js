@@ -1,9 +1,7 @@
-var express = require('express');
-var router = express.Router();
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+app.get('/', (req, res) => {
+  if(req.session.user) {
+       res.send(`Hallo ${req.session.user.username}, willkommen im geschützten Bereich. <a href="/logout">Logout</a>`);
+  } else {
+       res.redirect('/login');
+  }
 });
-
-module.exports = router;

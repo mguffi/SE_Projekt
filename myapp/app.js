@@ -6,6 +6,7 @@ var logger = require('morgan');
 var session = require('express-session');
 
 var indexRouter = require('./routes/index');
+app.use('/', indexRouter);
 var usersRouter = require('./routes/users');
 // Neuer Router für Authentifizierung (Login, Signup, Logout)
 var authRouter = require('./routes/auth');

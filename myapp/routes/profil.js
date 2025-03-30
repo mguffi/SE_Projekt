@@ -23,17 +23,42 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Alle Profilfelder aktualisieren
+// Profilfelder aktualisieren (optional)
 router.post('/update', async (req, res) => {
-    const { image_url, name, gender, birthday } = req.body; // Alle Felder aus dem Formular
+    const { image_url, name, gender, birthday } = req.body; // Felder aus dem Formular
     if (!req.session.user) {
         return res.redirect('/login');
     }
 
     try {
-        // SQL-Abfrage, um alle Felder gleichzeitig zu aktualisieren
-        const query = `UPDATE user SET image_url = ?, name = ?, gender = ?, birthday = ? WHERE id = ?`;
-        await pool.execute(query, [image_url, name, gender, birthday, req.session.user.id]);
+        // Dynamische SQL-Abfrage basierend auf den übergebenen Feldern
+        const updates = [];
+        const values = [];
+
+        if (image_url) {
+            updates.push('image_url = ?');
+            values.push(image_url);
+        }
+        if (name) {
+            updates.push('name = ?');
+            values.push(name);
+        }
+        if (gender) {
+            updates.push('gender = ?');
+            values.push(gender);
+        }
+        if (birthday) {
+            updates.push('birthday = ?');
+            values.push(birthday);
+        }
+
+        // Nur aktualisieren, wenn mindestens ein Feld übergeben wurde
+        if (updates.length > 0) {
+            const query = `UPDATE user SET ${updates.join(', ')} WHERE id = ?`;
+            values.push(req.session.user.id);
+            await pool.execute(query, values);
+        }
+
         res.redirect('/profil');
     } catch (err) {
         console.error(err);

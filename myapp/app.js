@@ -29,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Session-Middleware konfigurieren
 app.use(session({
-    secret: '123', // Ersetze durch einen sicheren Wert
+    secret: 'deinGeheimerSchlüssel', // Ersetze durch einen sicheren Wert
     resave: false,
     saveUninitialized: true,
 }));

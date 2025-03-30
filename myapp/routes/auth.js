@@ -44,14 +44,22 @@ router.get('/signup', (req, res) => {
 router.post('/signup', async (req, res) => {
     const { username, password } = req.body;
     try {
+        const [existingUser] = await pool.execute('SELECT * FROM user WHERE name = ?', [username]);
+        if (existingUser.length > 0) {
+            return res.render('signup', { error: 'Benutzername ist bereits vergeben' });
+        }
+
         // Passwort hashen
         const hashedPassword = await bcrypt.hash(password, 10);
+
         // Benutzer in die Datenbank einfügen
         await pool.execute('INSERT INTO user (name, password_hash) VALUES (?, ?)', [username, hashedPassword]);
-        res.redirect('/login'); // Weiterleitung zur Login-Seite
+
+        // Weiterleitung zur Login-Seite
+        res.redirect('/login');
     } catch (err) {
         console.error(err);
-        res.render('signup', { error: 'Benutzername bereits vergeben oder interner Fehler' });
+        res.render('signup', { error: 'Interner Fehler. Bitte versuche es später erneut.' });
     }
 });
 

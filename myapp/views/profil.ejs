@@ -1,22 +1,38 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Profil</title>
-  <style>
-    body { font-family: Arial, sans-serif; }
-    .profile-container { max-width: 400px; margin: 20px auto; text-align: center; }
-    .profile-container img { max-width: 200px; border-radius: 50%; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil</title>
 </head>
 <body>
-  <div class="profile-container">
     <h1>Profilseite</h1>
-    <img src="<%= user.image_url %>" alt="Profilbild">
-    <p><strong>Name:</strong> <%= user.name %></p>
-    <p><strong>Geburtstag:</strong> <%= user.birthday %></p>
-    <p><strong>Geschlecht:</strong> <%= user.gender %></p>
-    <a href="/logout">Logout</a>
-  </div>
+    <div>
+        <h2>Deine Profildaten</h2>
+        <img src="<%= profile.profilePicture %>" alt="Profilbild" style="width: 150px; height: 150px;">
+        <p><strong>Name:</strong> <%= profile.name %></p>
+        <p><strong>Geschlecht:</strong> <%= profile.gender %></p>
+        <p><strong>Geburtstag:</strong> <%= profile.birthday %></p>
+    </div>
+
+    <div>
+        <h2>Profildaten bearbeiten</h2>
+        <form action="/profil/update" method="POST">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="<%= profile.name %>"><br><br>
+
+            <label for="gender">Geschlecht:</label>
+            <select id="gender" name="gender">
+                <option value="Male" <%= profile.gender === 'Male' ? 'selected' : '' %>>Male</option>
+                <option value="Female" <%= profile.gender === 'Female' ? 'selected' : '' %>>Female</option>
+                <option value="Other" <%= profile.gender === 'Other' ? 'selected' : '' %>>Other</option>
+            </select><br><br>
+
+            <label for="birthday">Geburtstag:</label>
+            <input type="date" id="birthday" name="birthday" value="<%= profile.birthday %>"><br><br>
+
+            <button type="submit">Speichern</button>
+        </form>
+    </div>
 </body>
 </html>

@@ -1,18 +1,29 @@
-// routes/profil.js
 const express = require('express');
 const router = express.Router();
 
-// Middleware, um sicherzustellen, dass der Benutzer eingeloggt ist
-function requireLogin(req, res, next) {
-  if (req.session.user) {
-    next();
-  } else {
-    res.redirect('/login');
-  }
-}
+// Mock database (replace with your actual database logic)
+let userProfile = {
+    name: "John Doe",
+    gender: "Male",
+    birthday: "1990-01-01",
+    profilePicture: "/images/default-profile.png"
+};
 
-router.get('/', requireLogin, (req, res) => {
-  res.render('profil', { user: req.session.user });
+// Route to get the profile data
+router.get('/', (req, res) => {
+    res.render('profil', { profile: userProfile });
+});
+
+// Route to update the profile data
+router.post('/update', (req, res) => {
+    const { name, gender, birthday } = req.body;
+
+    // Update the user profile (add validation as needed)
+    if (name) userProfile.name = name;
+    if (gender) userProfile.gender = gender;
+    if (birthday) userProfile.birthday = birthday;
+
+    res.redirect('/profil');
 });
 
 module.exports = router;

@@ -12,6 +12,7 @@ var authRouter = require('./routes/auth');
 // Router für die Profilseite
 var profilRouter = require('./routes/profil');
 
+app.use('/profil', profilRouter);
 var app = express();
 
 // view engine setup

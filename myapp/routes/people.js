@@ -1,3 +1,8 @@
+const express = require('express');
+const pool = require('../db'); // Importiere die Datenbankverbindung
+const router = express.Router(); // Initialisiere den Router
+
+// Route für die People-Seite
 router.get('/', async (req, res) => {
     if (!req.session.user) {
         console.error('Benutzer ist nicht eingeloggt.');
@@ -53,3 +58,5 @@ router.get('/', async (req, res) => {
         res.render('error', { message: 'Interner Fehler beim Abrufen der Profile', error: err });
     }
 });
+
+module.exports = router; // Exportiere den Router

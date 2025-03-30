@@ -10,7 +10,7 @@
     <div class="container mt-5">
         <h1 class="text-danger">Fehler</h1>
         <h2>Status: <%= error.status || 500 %></h2>
-        <p><strong>Nachricht:</strong> <%= message || 'Ein unbekannter Fehler ist aufgetreten.' %></p>
+        <p><strong>Nachricht:</strong> <%= typeof message !== 'undefined' ? message : 'Ein unbekannter Fehler ist aufgetreten.' %></p>
         <% if (error.stack) { %>
             <pre><%= error.stack %></pre>
         <% } %>

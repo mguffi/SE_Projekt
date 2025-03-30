@@ -61,8 +61,8 @@ router.post('/update', async (req, res) => {
 
         res.redirect('/profil');
     } catch (err) {
-        console.error(err);
-        res.render('error', { error: 'Interner Fehler beim Aktualisieren des Profils' });
+        console.error('Fehler beim Aktualisieren des Profils:', err);
+        res.render('error', { message: 'Interner Fehler beim Aktualisieren des Profils', error: err });
     }
 });
 

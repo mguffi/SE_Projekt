@@ -42,10 +42,10 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/', authRouter);
 app.use('/profil', profilRouter);
-app.use('/likes', likesRouter); // Registriere die Likes-Route
+app.use('/likes', likesRouter);
+app.use('/chat', chatRouter);
 app.use('/people', peopleRouter); // Registriere die People-Route
 app.use('/filter', filterRouter); // Registriere die Filter-Route
-app.use('/chat', chatRouter); // Registriere die Chat-Route
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

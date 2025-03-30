@@ -3,6 +3,11 @@ const bcrypt = require('bcrypt');
 const pool = require('../db'); // Beispiel: Datenbankverbindung importieren
 const router = express.Router();
 
+// Datenbankverbindung testen
+pool.query('SELECT 1')
+    .then(() => console.log('Datenbankverbindung erfolgreich!'))
+    .catch(err => console.error('Datenbankverbindung fehlgeschlagen:', err));
+
 // Login-Route
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;

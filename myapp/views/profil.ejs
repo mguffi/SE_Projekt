@@ -15,39 +15,48 @@
             <div class="card-body text-center">
                 <!-- Profilbild -->
                 <img src="<%= user.image_url %>" alt="Profilbild" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
-                <form action="/profil/update" method="POST" class="mt-3">
-                    <input type="hidden" name="field" value="image_url">
-                    <label for="image_url" class="form-label">Profilbild URL:</label>
-                    <input type="text" id="image_url" name="value" class="form-control" value="<%= user.image_url %>">
-                    <button type="submit" class="btn btn-primary mt-2">Ändern</button>
-                </form>
+                <p class="mt-3"><strong>Name:</strong> <%= user.name %></p>
+                <p><strong>Geschlecht:</strong> <%= user.gender === 'male' ? 'Männlich' : 'Weiblich' %></p>
+                <p><strong>Geburtstag:</strong> <%= new Date(user.birthday).toLocaleDateString('de-DE') %></p>
 
-                <!-- Name -->
-                <form action="/profil/update" method="POST" class="mt-3">
-                    <input type="hidden" name="field" value="name">
-                    <label for="name" class="form-label">Name:</label>
-                    <input type="text" id="name" name="value" class="form-control" value="<%= user.name %>">
-                    <button type="submit" class="btn btn-primary mt-2">Ändern</button>
-                </form>
+                <!-- Button zum Bearbeiten -->
+                <button class="btn btn-primary mt-4" data-bs-toggle="modal" data-bs-target="#editProfileModal">Bearbeiten</button>
+            </div>
+        </div>
+    </div>
 
-                <!-- Geschlecht -->
-                <form action="/profil/update" method="POST" class="mt-3">
-                    <input type="hidden" name="field" value="gender">
-                    <label for="gender" class="form-label">Geschlecht:</label>
-                    <select id="gender" name="value" class="form-select">
-                        <option value="male" <%= user.gender === 'male' ? 'selected' : '' %>>Männlich</option>
-                        <option value="female" <%= user.gender === 'female' ? 'selected' : '' %>>Weiblich</option>
-                    </select>
-                    <button type="submit" class="btn btn-primary mt-2">Ändern</button>
-                </form>
-
-                <!-- Geburtstag -->
-                <form action="/profil/update" method="POST" class="mt-3">
-                    <input type="hidden" name="field" value="birthday">
-                    <label for="birthday" class="form-label">Geburtstag:</label>
-                    <input type="date" id="birthday" name="value" class="form-control" value="<%= user.birthday %>">
-                    <button type="submit" class="btn btn-primary mt-2">Ändern</button>
-                </form>
+    <!-- Modal für das Bearbeiten des Profils -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProfileModalLabel">Profildaten bearbeiten</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/profil/update" method="POST">
+                        <div class="mb-3">
+                            <label for="image_url" class="form-label">Profilbild URL:</label>
+                            <input type="text" class="form-control" id="image_url" name="image_url" value="<%= user.image_url %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name:</label>
+                            <input type="text" class="form-control" id="name" name="name" value="<%= user.name %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="gender" class="form-label">Geschlecht:</label>
+                            <select class="form-select" id="gender" name="gender">
+                                <option value="male" <%= user.gender === 'male' ? 'selected' : '' %>>Männlich</option>
+                                <option value="female" <%= user.gender === 'female' ? 'selected' : '' %>>Weiblich</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="birthday" class="form-label">Geburtstag:</label>
+                            <input type="date" class="form-control" id="birthday" name="birthday" value="<%= user.birthday %>" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Speichern</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

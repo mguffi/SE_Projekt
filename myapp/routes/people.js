@@ -54,13 +54,17 @@ router.get('/', async (req, res) => {
 
             // Alter berechnen
             const birthDate = new Date(profile.birthday);
-            const age = new Date().getFullYear() - birthDate.getFullYear();
-            const monthDiff = new Date().getMonth() - birthDate.getMonth();
-            if (monthDiff < 0 || (monthDiff === 0 && new Date().getDate() < birthDate.getDate())) {
-                profile.age = age - 1;
-            } else {
-                profile.age = age;
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            const dayDiff = today.getDate() - birthDate.getDate();
+
+            // Überprüfen, ob der Geburtstag in diesem Jahr noch nicht war
+            if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+                age -= 1;
             }
+
+            profile.age = age;
 
             res.render('people', { profile, filters, error: null });
         } else {

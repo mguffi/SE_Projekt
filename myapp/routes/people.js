@@ -4,6 +4,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     if (!req.session.user) {
+        console.error('Benutzer ist nicht eingeloggt.');
         return res.redirect('/login');
     }
 
@@ -12,6 +13,9 @@ router.get('/', async (req, res) => {
         const userId = req.session.user.id;
         const userGender = req.session.user.gender;
 
+        console.log('Benutzer-ID:', userId);
+        console.log('Benutzer-Geschlecht:', userGender);
+
         // Standardfilter: Zeige das andere Geschlecht an
         const filters = req.session.filters || {
             gender: userGender === 'male' ? 'female' : 'male', // Standardmäßig das andere Geschlecht
@@ -19,10 +23,15 @@ router.get('/', async (req, res) => {
             maxAge: 99,
         };
 
+        console.log('Filter:', filters);
+
         // Berechnung der Geburtsjahre basierend auf Altersgrenzen
         const currentYear = new Date().getFullYear();
         const minBirthday = new Date(currentYear - filters.maxAge, 0, 1).toISOString().split('T')[0];
         const maxBirthday = new Date(currentYear - filters.minAge, 11, 31).toISOString().split('T')[0];
+
+        console.log('MinBirthday:', minBirthday);
+        console.log('MaxBirthday:', maxBirthday);
 
         // Datenbankabfrage: Nur eine zufällige Person anzeigen
         const [rows] = await pool.execute(
@@ -35,6 +44,8 @@ router.get('/', async (req, res) => {
              LIMIT 1`,
             [userId, filters.gender, minBirthday, maxBirthday]
         );
+
+        console.log('Gefundene Profile:', rows);
 
         if (rows.length > 0) {
             res.render('people', { profile: rows[0] });

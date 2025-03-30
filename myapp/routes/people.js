@@ -64,7 +64,7 @@ router.get('/', async (req, res) => {
                 age -= 1;
             }
 
-            profile.age = age;
+            profile.age = age; // Alter wird hier gesetzt
 
             res.render('people', { profile, filters, error: null });
         } else {

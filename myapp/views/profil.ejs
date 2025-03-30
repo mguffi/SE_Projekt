@@ -13,11 +13,7 @@
                 <h1 class="card-title">Dein Profil</h1>
                 
                 <!-- Profilbild -->
-                <% if (user.image_url) { %>
-                    <img src="<%= user.image_url %>" alt="Profilbild" style="width: 150px; height: 150px;">
-                <% } else { %>
-                    <p>Kein Profilbild vorhanden</p>
-                <% } %>
+                <img src="<%= user.image_url %>" alt="Profilbild" style="width: 150px; height: 150px;">
                 
                 <!-- Profildaten -->
                 <p><strong>Name:</strong> <%= user.name %></p>

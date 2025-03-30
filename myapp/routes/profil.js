@@ -23,18 +23,23 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Profil aktualisieren
+// Einzelnes Profilfeld aktualisieren
 router.post('/update', async (req, res) => {
-    const { name, gender, birthday } = req.body;
+    const { field, value } = req.body; // Das zu ändernde Feld und der neue Wert
     if (!req.session.user) {
         return res.redirect('/login');
     }
 
+    // Sicherheitsprüfung: Nur erlaubte Felder können aktualisiert werden
+    const allowedFields = ['name', 'gender', 'birthday', 'image_url'];
+    if (!allowedFields.includes(field)) {
+        return res.status(400).render('error', { error: 'Ungültiges Feld' });
+    }
+
     try {
-        await pool.execute(
-            'UPDATE user SET name = ?, gender = ?, birthday = ? WHERE id = ?',
-            [name, gender, birthday, req.session.user.id]
-        );
+        // Dynamische SQL-Abfrage für das spezifische Feld
+        const query = `UPDATE user SET ${field} = ? WHERE id = ?`;
+        await pool.execute(query, [value, req.session.user.id]);
         res.redirect('/profil');
     } catch (err) {
         console.error(err);

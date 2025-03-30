@@ -17,7 +17,7 @@
             <div class="alert alert-warning text-center">
                 <%= error %>
             </div>
-        <% } else { %>
+        <% } else if (profile) { %>
             <div class="card mx-auto" style="max-width: 400px;">
                 <div class="card-body text-center">
                     <img src="<%= profile.image_url %>" alt="Profilbild" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">

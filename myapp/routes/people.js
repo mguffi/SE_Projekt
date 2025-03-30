@@ -1,7 +1,3 @@
-const express = require('express');
-const pool = require('../db'); // Datenbankverbindung importieren
-const router = express.Router();
-
 router.get('/', async (req, res) => {
     if (!req.session.user) {
         console.error('Benutzer ist nicht eingeloggt.');
@@ -48,14 +44,12 @@ router.get('/', async (req, res) => {
         console.log('Gefundene Profile:', rows);
 
         if (rows.length > 0) {
-            res.render('people', { profile: rows[0] });
+            res.render('people', { profile: rows[0], error: null }); // Fehler ist null, wenn ein Profil gefunden wurde
         } else {
-            res.render('people', { error: 'Keine passenden Profile gefunden.' });
+            res.render('people', { profile: null, error: 'Keine passenden Profile gefunden.' });
         }
     } catch (err) {
         console.error('Fehler beim Abrufen der Profile:', err);
         res.render('error', { message: 'Interner Fehler beim Abrufen der Profile', error: err });
     }
 });
-
-module.exports = router;

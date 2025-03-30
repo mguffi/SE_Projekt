@@ -18,20 +18,22 @@ router.get('/', async (req, res) => {
             res.redirect('/login');
         }
     } catch (err) {
-        console.error(err);
-        res.render('error', { error: 'Interner Fehler' });
+        console.error('Fehler beim Laden des Profils:', err);
+        res.render('error', { message: 'Fehler beim Laden des Profils', error: err });
     }
 });
 
-// Profilfelder aktualisieren (optional)
+// Profilfelder aktualisieren
 router.post('/update', async (req, res) => {
-    const { image_url, name, gender, birthday } = req.body; // Felder aus dem Formular
+    console.log('Formulardaten:', req.body); // Debugging-Log
+    const { image_url, name, gender, birthday } = req.body;
+
     if (!req.session.user) {
+        console.log('Benutzer nicht eingeloggt'); // Debugging-Log
         return res.redirect('/login');
     }
 
     try {
-        // Dynamische SQL-Abfrage basierend auf den übergebenen Feldern
         const updates = [];
         const values = [];
 
@@ -52,17 +54,18 @@ router.post('/update', async (req, res) => {
             values.push(birthday);
         }
 
-        // Nur aktualisieren, wenn mindestens ein Feld übergeben wurde
         if (updates.length > 0) {
             const query = `UPDATE user SET ${updates.join(', ')} WHERE id = ?`;
             values.push(req.session.user.id);
+            console.log('SQL-Query:', query); // Debugging-Log
+            console.log('Werte:', values); // Debugging-Log
             await pool.execute(query, values);
         }
 
         res.redirect('/profil');
     } catch (err) {
         console.error('Fehler beim Aktualisieren des Profils:', err);
-        res.render('error', { message: 'Interner Fehler beim Aktualisieren des Profils', error: err });
+        res.render('error', { message: 'Fehler beim Aktualisieren des Profils', error: err });
     }
 });
 

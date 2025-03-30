@@ -27,14 +27,21 @@
                 </div>
                 <div class="text-center mt-3">
                     <form action="/people/like" method="POST" class="d-inline">
+                        <input type="hidden" name="userId" value="<%= profile.id %>">
                         <button type="submit" class="btn btn-success">Like</button>
                     </form>
                     <form action="/people/dislike" method="POST" class="d-inline">
+                        <input type="hidden" name="userId" value="<%= profile.id %>">
                         <button type="submit" class="btn btn-danger">Dislike</button>
                     </form>
                 </div>
             </div>
         <% } %>
+        <div class="text-center mt-5">
+            <form action="/people/reset" method="POST">
+                <button type="submit" class="btn btn-warning">Dislikes zurücksetzen</button>
+            </form>
+        </div>
     </div>
 
     <!-- JavaScript -->

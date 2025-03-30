@@ -10,7 +10,6 @@ router.get('/', async (req, res) => {
     }
 
     try {
-        // Benutzerinformationen aus der Session
         const userId = req.session.user.id;
         const userGender = req.session.user.gender;
 
@@ -19,7 +18,7 @@ router.get('/', async (req, res) => {
 
         // Standardfilter: Zeige das andere Geschlecht an
         const filters = req.session.filters || {
-            gender: userGender === 'male' ? 'female' : 'male', // Standardmäßig das andere Geschlecht
+            gender: userGender === 'male' ? 'female' : 'male',
             minAge: 18,
             maxAge: 99,
         };
@@ -34,22 +33,27 @@ router.get('/', async (req, res) => {
         console.log('MinBirthday:', minBirthday);
         console.log('MaxBirthday:', maxBirthday);
 
-        // Datenbankabfrage: Nur eine zufällige Person anzeigen
+        // Datenbankabfrage: Nur eine zufällige Person anzeigen, die nicht geliked oder gedisliked wurde
         const [rows] = await pool.execute(
             `SELECT id, name, gender, birthday, image_url 
              FROM user 
              WHERE id != ? 
              AND gender = ? 
              AND birthday BETWEEN ? AND ? 
+             AND id NOT IN (
+                 SELECT liked_user_id FROM likes WHERE user_id = ?
+                 UNION
+                 SELECT disliked_user_id FROM dislikes WHERE user_id = ?
+             )
              ORDER BY RAND() 
              LIMIT 1`,
-            [userId, filters.gender, minBirthday, maxBirthday]
+            [userId, filters.gender, minBirthday, maxBirthday, userId, userId]
         );
 
         console.log('Gefundene Profile:', rows);
 
         if (rows.length > 0) {
-            res.render('people', { profile: rows[0], error: null }); // Fehler ist null, wenn ein Profil gefunden wurde
+            res.render('people', { profile: rows[0], error: null });
         } else {
             res.render('people', { profile: null, error: 'Keine passenden Profile gefunden.' });
         }
@@ -59,4 +63,78 @@ router.get('/', async (req, res) => {
     }
 });
 
-module.exports = router; // Exportiere den Router
+// Like-Route
+router.post('/like', async (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+
+    try {
+        const userId = req.session.user.id;
+        const likedUserId = req.body.userId;
+
+        console.log('Like von Benutzer:', userId, 'für Benutzer:', likedUserId);
+
+        // Füge den Like in die Datenbank ein
+        await pool.execute(
+            `INSERT INTO likes (user_id, liked_user_id) VALUES (?, ?)`,
+            [userId, likedUserId]
+        );
+
+        res.redirect('/people');
+    } catch (err) {
+        console.error('Fehler beim Liken:', err);
+        res.render('error', { message: 'Interner Fehler beim Liken', error: err });
+    }
+});
+
+// Dislike-Route
+router.post('/dislike', async (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+
+    try {
+        const userId = req.session.user.id;
+        const dislikedUserId = req.body.userId;
+
+        console.log('Dislike von Benutzer:', userId, 'für Benutzer:', dislikedUserId);
+
+        // Füge den Dislike in die Datenbank ein
+        await pool.execute(
+            `INSERT INTO dislikes (user_id, disliked_user_id) VALUES (?, ?)`,
+            [userId, dislikedUserId]
+        );
+
+        res.redirect('/people');
+    } catch (err) {
+        console.error('Fehler beim Disliken:', err);
+        res.render('error', { message: 'Interner Fehler beim Disliken', error: err });
+    }
+});
+
+// Reset-Route für Dislikes
+router.post('/reset', async (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+
+    try {
+        const userId = req.session.user.id;
+
+        console.log('Reset der Dislikes für Benutzer:', userId);
+
+        // Lösche alle Dislikes des Benutzers
+        await pool.execute(
+            `DELETE FROM dislikes WHERE user_id = ?`,
+            [userId]
+        );
+
+        res.redirect('/people');
+    } catch (err) {
+        console.error('Fehler beim Zurücksetzen der Dislikes:', err);
+        res.render('error', { message: 'Interner Fehler beim Zurücksetzen der Dislikes', error: err });
+    }
+});
+
+module.exports = router;

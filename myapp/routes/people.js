@@ -8,9 +8,13 @@ router.get('/', async (req, res) => {
     }
 
     try {
-        // Standardwerte für Filter, falls sie nicht gesetzt sind
+        // Benutzerinformationen aus der Session
+        const userId = req.session.user.id;
+        const userGender = req.session.user.gender;
+
+        // Standardfilter: Zeige das andere Geschlecht an
         const filters = req.session.filters || {
-            gender: 'male',
+            gender: userGender === 'male' ? 'female' : 'male', // Standardmäßig das andere Geschlecht
             minAge: 18,
             maxAge: 99,
         };
@@ -20,15 +24,16 @@ router.get('/', async (req, res) => {
         const minBirthday = new Date(currentYear - filters.maxAge, 0, 1).toISOString().split('T')[0];
         const maxBirthday = new Date(currentYear - filters.minAge, 11, 31).toISOString().split('T')[0];
 
-        // Datenbankabfrage
+        // Datenbankabfrage: Nur eine zufällige Person anzeigen
         const [rows] = await pool.execute(
-            `SELECT * FROM user 
+            `SELECT id, name, gender, birthday, image_url 
+             FROM user 
              WHERE id != ? 
              AND gender = ? 
              AND birthday BETWEEN ? AND ? 
              ORDER BY RAND() 
              LIMIT 1`,
-            [req.session.user.id, filters.gender, minBirthday, maxBirthday]
+            [userId, filters.gender, minBirthday, maxBirthday]
         );
 
         if (rows.length > 0) {

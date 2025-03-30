@@ -50,9 +50,9 @@ router.get('/', async (req, res) => {
         console.log('Gefundene Profile:', rows);
 
         if (rows.length > 0) {
-            res.render('people', { profile: rows[0], error: null });
+            res.render('people', { profile: rows[0], filters, error: null });
         } else {
-            res.render('people', { profile: null, error: 'Keine passenden Profile gefunden.' });
+            res.render('people', { profile: null, filters, error: 'Keine passenden Profile gefunden.' });
         }
     } catch (err) {
         console.error('Fehler beim Abrufen der Profile:', err);

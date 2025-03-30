@@ -150,4 +150,32 @@ router.post('/reset', async (req, res) => {
     }
 });
 
+// Match-Route
+router.get('/matches', async (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+
+    try {
+        const userId = req.session.user.id;
+
+        // Finde Matches: Benutzer, die sich gegenseitig geliked haben
+        const [matches] = await pool.execute(
+            `SELECT u.id, u.name, u.gender, u.image_url 
+             FROM user u
+             INNER JOIN likes l1 ON u.id = l1.liked_user_id
+             INNER JOIN likes l2 ON l1.liked_user_id = l2.user_id
+             WHERE l1.user_id = ? AND l2.liked_user_id = ?`,
+            [userId, userId]
+        );
+
+        console.log('Gefundene Matches:', matches);
+
+        res.render('likes', { matches });
+    } catch (err) {
+        console.error('Fehler beim Abrufen der Matches:', err);
+        res.render('error', { message: 'Interner Fehler beim Abrufen der Matches', error: err });
+    }
+});
+
 module.exports = router;

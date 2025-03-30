@@ -28,9 +28,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Session-Middleware konfigurieren
 app.use(session({
-  secret: 'dein geheimer Schlüssel', // bitte durch einen sicheren Wert ersetzen
-  resave: false,
-  saveUninitialized: true,
+    secret: 'deinGeheimerSchlüssel', // Ersetze durch einen sicheren Wert
+    resave: false,
+    saveUninitialized: true,
 }));
 
 // Routen registrieren

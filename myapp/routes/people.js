@@ -50,7 +50,19 @@ router.get('/', async (req, res) => {
         console.log('Gefundene Profile:', rows);
 
         if (rows.length > 0) {
-            res.render('people', { profile: rows[0], filters, error: null });
+            const profile = rows[0];
+
+            // Alter berechnen
+            const birthDate = new Date(profile.birthday);
+            const age = new Date().getFullYear() - birthDate.getFullYear();
+            const monthDiff = new Date().getMonth() - birthDate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && new Date().getDate() < birthDate.getDate())) {
+                profile.age = age - 1;
+            } else {
+                profile.age = age;
+            }
+
+            res.render('people', { profile, filters, error: null });
         } else {
             res.render('people', { profile: null, filters, error: 'Keine passenden Profile gefunden.' });
         }

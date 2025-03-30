@@ -47,6 +47,7 @@
                     <img src="<%= profile.image_url %>" alt="Profilbild" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
                     <h3 class="mt-3"><%= profile.name %></h3>
                     <p><strong>Geschlecht:</strong> <%= profile.gender === 'male' ? 'Männlich' : 'Weiblich' %></p>
+                    <p><strong>Alter:</strong> <%= profile.age %> Jahre</p>
                     <p><strong>Geburtstag:</strong> <%= new Date(profile.birthday).toLocaleDateString('de-DE') %></p>
                 </div>
                 <div class="text-center mt-3">

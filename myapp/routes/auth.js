@@ -58,8 +58,12 @@ router.post('/signup', async (req, res) => {
         // Weiterleitung zur Login-Seite
         res.redirect('/login');
     } catch (err) {
-        console.error(err);
-        res.render('signup', { error: 'Interner Fehler. Bitte versuche es später erneut.' });
+        if (err.code === 'ER_DUP_ENTRY') {
+            res.render('signup', { error: 'Benutzername ist bereits vergeben' });
+        } else {
+            console.error('Fehler beim Registrieren:', err);
+            res.render('signup', { error: 'Interner Fehler. Bitte versuche es später erneut.' });
+        }
     }
 });
 

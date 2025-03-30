@@ -22,9 +22,8 @@ router.post('/login', async (req, res) => {
             const user = rows[0];
             const match = await bcrypt.compare(password, user.password_hash);
             if (match) {
-                // Benutzer in der Session speichern
                 req.session.user = { id: user.id, name: user.name, gender: user.gender };
-                return res.redirect('/profil'); // Weiterleitung zur Profilseite
+                return res.redirect('/people');
             }
         }
         res.render('login', { error: 'Falscher Benutzername oder Passwort' });
@@ -41,28 +40,21 @@ router.get('/signup', (req, res) => {
 });
 
 router.post('/signup', async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, gender } = req.body;
     try {
         const [existingUser] = await pool.execute('SELECT * FROM user WHERE name = ?', [username]);
         if (existingUser.length > 0) {
             return res.render('signup', { error: 'Benutzername ist bereits vergeben' });
         }
 
-        // Passwort hashen
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Benutzer in die Datenbank einfügen
-        await pool.execute('INSERT INTO user (name, password_hash) VALUES (?, ?)', [username, hashedPassword]);
+        await pool.execute('INSERT INTO user (name, password_hash, gender) VALUES (?, ?, ?)', [username, hashedPassword, gender]);
 
-        // Weiterleitung zur Login-Seite
         res.redirect('/login');
     } catch (err) {
-        if (err.code === 'ER_DUP_ENTRY') {
-            res.render('signup', { error: 'Benutzername ist bereits vergeben' });
-        } else {
-            console.error('Fehler beim Registrieren:', err);
-            res.render('signup', { error: 'Interner Fehler. Bitte versuche es später erneut.' });
-        }
+        console.error('Fehler beim Registrieren:', err);
+        res.render('signup', { error: 'Interner Fehler. Bitte versuche es später erneut.' });
     }
 });
 

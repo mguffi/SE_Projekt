@@ -164,8 +164,8 @@ router.get('/matches', async (req, res) => {
             `SELECT u.id, u.name, u.gender, u.image_url 
              FROM user u
              INNER JOIN likes l1 ON u.id = l1.liked_user_id
-             INNER JOIN likes l2 ON l1.liked_user_id = l2.user_id
-             WHERE l1.user_id = ? AND l2.liked_user_id = ?`,
+             INNER JOIN likes l2 ON l1.user_id = l2.liked_user_id
+             WHERE l1.user_id = ? AND l2.user_id = ?`,
             [userId, userId]
         );
 

@@ -22,10 +22,6 @@
                             <div class="card-body text-center">
                                 <h5 class="card-title"><%= match.name %></h5>
                                 <p><strong>Geschlecht:</strong> <%= match.gender === 'male' ? 'Männlich' : 'Weiblich' %></p>
-                                <form action="/chat" method="GET">
-                                    <input type="hidden" name="userId" value="<%= match.id %>">
-                                    <button type="submit" class="btn btn-primary">Chat starten</button>
-                                </form>
                             </div>
                         </div>
                     </div>

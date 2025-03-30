@@ -19,12 +19,17 @@ router.post('/login', async (req, res) => {
             const user = rows[0];
             const match = await bcrypt.compare(password, user.password_hash);
             if (match) {
+<<<<<<< HEAD
                 const token = jwt.sign(
                     { id: user.id, name: user.name, gender: user.gender },
                     JWT_SECRET,
                     { expiresIn: '1h' }
                 );
                 return res.json({ token });
+=======
+                req.session.user = { id: user.id, name: user.name, gender: user.gender };
+                return res.redirect('/people');
+>>>>>>> 871aa86 (add chat route and update user redirection in authentication; include gender in user signup)
             }
         }
         res.status(401).json({ error: 'Invalid username or password' });
@@ -41,7 +46,11 @@ router.get('/signup', (req, res) => {
 
 // Registrierung-Route
 router.post('/signup', async (req, res) => {
+<<<<<<< HEAD
     const { username, password, gender, birthday } = req.body;
+=======
+    const { username, password, gender } = req.body;
+>>>>>>> 871aa86 (add chat route and update user redirection in authentication; include gender in user signup)
     try {
         const [existingUser] = await req.db.execute('SELECT * FROM user WHERE name = ?', [username]);
         if (existingUser.length > 0) {
@@ -60,10 +69,19 @@ router.post('/signup', async (req, res) => {
             ]
         );
 
+<<<<<<< HEAD
         res.status(201).json({ message: 'User registered successfully' });
     } catch (err) {
         console.error('Signup error:', err);
         res.status(500).json({ error: 'Internal server error' });
+=======
+        await pool.execute('INSERT INTO user (name, password_hash, gender) VALUES (?, ?, ?)', [username, hashedPassword, gender]);
+
+        res.redirect('/login');
+    } catch (err) {
+        console.error('Fehler beim Registrieren:', err);
+        res.render('signup', { error: 'Interner Fehler. Bitte versuche es später erneut.' });
+>>>>>>> 871aa86 (add chat route and update user redirection in authentication; include gender in user signup)
     }
 });
 

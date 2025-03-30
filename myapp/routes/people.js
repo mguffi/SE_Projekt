@@ -47,7 +47,63 @@ router.post('/dislike', async (req, res) => {
         res.redirect('/people');
     } catch (err) {
         console.error('Fehler beim Disliken:', err);
+<<<<<<< HEAD
         res.status(500).send('Ein Fehler ist aufgetreten');
+=======
+        res.render('error', { message: 'Interner Fehler beim Disliken', error: err });
+    }
+});
+
+// Reset-Route für Dislikes
+router.post('/reset', async (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+
+    try {
+        const userId = req.session.user.id;
+
+        console.log('Reset der Dislikes für Benutzer:', userId);
+
+        // Lösche alle Dislikes des Benutzers
+        await pool.execute(
+            `DELETE FROM dislikes WHERE user_id = ?`,
+            [userId]
+        );
+
+        res.redirect('/people');
+    } catch (err) {
+        console.error('Fehler beim Zurücksetzen der Dislikes:', err);
+        res.render('error', { message: 'Interner Fehler beim Zurücksetzen der Dislikes', error: err });
+    }
+});
+
+// Match-Route
+router.get('/matches', async (req, res) => {
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+
+    try {
+        const userId = req.session.user.id;
+
+        // Finde Matches: Benutzer, die sich gegenseitig geliked haben
+        const [matches] = await pool.execute(
+            `SELECT u.id, u.name, u.gender, u.image_url 
+             FROM user u
+             INNER JOIN likes l1 ON u.id = l1.liked_user_id
+             INNER JOIN likes l2 ON l1.user_id = l2.liked_user_id
+             WHERE l1.user_id = ? AND l2.user_id = ?`,
+            [userId, userId]
+        );
+
+        console.log('Gefundene Matches:', matches);
+
+        res.render('likes', { matches });
+    } catch (err) {
+        console.error('Fehler beim Abrufen der Matches:', err);
+        res.render('error', { message: 'Interner Fehler beim Abrufen der Matches', error: err });
+>>>>>>> 871aa86 (add chat route and update user redirection in authentication; include gender in user signup)
     }
 });
 

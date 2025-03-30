@@ -13,12 +13,9 @@ router.get('/', async (req, res) => {
         const userId = req.session.user.id;
         const userGender = req.session.user.gender;
 
-        console.log('Benutzer-ID:', userId);
-        console.log('Benutzer-Geschlecht:', userGender);
-
-        // Standardfilter: Zeige das andere Geschlecht an
+        // Filter aus der Session übernehmen oder Standardwerte setzen
         const filters = req.session.filters || {
-            gender: userGender === 'male' ? 'female' : 'male',
+            gender: userGender === 'male' ? 'female' : 'male', // Standard: anderes Geschlecht
             minAge: 18,
             maxAge: 99,
         };

@@ -14,13 +14,13 @@
                 
                 <!-- Profilbild -->
                 <% if (user.image_url) { %>
-                    <img src="<%= user.image_url %>" class="rounded-circle img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
+                    <img src="<%= user.image_url %>" alt="Profilbild" style="width: 150px; height: 150px;">
                 <% } else { %>
                     <p>Kein Profilbild vorhanden</p>
                 <% } %>
                 
                 <!-- Profildaten -->
-                <p class="mt-3"><strong>Name:</strong> <%= user.name %></p>
+                <p><strong>Name:</strong> <%= user.name %></p>
                 <p><strong>Geschlecht:</strong> <%= user.gender === 'male' ? 'Männlich' : 'Weiblich' %></p>
                 <p><strong>Geburtstag:</strong> <%= new Date(user.birthday).toLocaleDateString('de-DE') %></p>
                 

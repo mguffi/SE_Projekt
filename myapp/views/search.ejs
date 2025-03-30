@@ -43,6 +43,16 @@
         <button class="button like-button" onclick="likeImage()">Like</button>
     </div>
 
+    <h1><%= profile.name %></h1>
+    <img src="<%= profile.image_url %>" alt="Profilbild">
+    <p><strong>Geschlecht:</strong> <%= profile.gender %></p>
+    <p><strong>Geburtstag:</strong> <%= new Date(profile.birthday).toLocaleDateString('de-DE') %></p>
+    <form action="/people/like" method="POST">
+        <button type="submit">Like</button>
+    </form>
+    <form action="/people/dislike" method="POST">
+        <button type="submit">Dislike</button>
+    </form>
 </div>
 
 <script>

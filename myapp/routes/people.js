@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 
         // Filter aus der Session übernehmen oder Standardwerte setzen
         const filters = req.session.filters || {
-            gender: userGender === 'male' ? 'female' : 'male', // Standard: anderes Geschlecht
+            gender: req.session.user.gender === 'male' ? 'female' : 'male', // Standard: anderes Geschlecht
             minAge: 18,
             maxAge: 99,
         };

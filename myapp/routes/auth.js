@@ -20,11 +20,10 @@ router.post('/login', async (req, res) => {
         const [rows] = await pool.execute('SELECT * FROM user WHERE name = ?', [username]);
         if (rows.length > 0) {
             const user = rows[0];
-            // Passwort überprüfen
             const match = await bcrypt.compare(password, user.password_hash);
             if (match) {
                 // Benutzer in der Session speichern
-                req.session.user = { id: user.id, name: user.name };
+                req.session.user = { id: user.id, name: user.name, gender: user.gender };
                 return res.redirect('/profil'); // Weiterleitung zur Profilseite
             }
         }

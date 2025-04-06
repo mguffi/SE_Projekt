@@ -4,6 +4,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mysql = require('mysql2/promise');
+const jwt = require('jsonwebtoken');
+const createError = require('http-errors');
 
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
@@ -48,22 +50,29 @@ app.use((req, res, next) => {
     next();
 });
 
-// Authentifizierungs-Middleware
-const authMiddleware = (req, res, next) => {
-    if (req.session.userId) {
-        next();
-    } else {
-        res.redirect('/login');
+// JWT-Authentifizierungs-Middleware
+const authenticateJWT = (req, res, next) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized' });
     }
+
+    jwt.verify(token, 'your_jwt_secret', (err, user) => {
+        if (err) {
+            return res.status(403).json({ error: 'Forbidden' });
+        }
+        req.user = user;
+        next();
+    });
 };
 
 // Routen
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
-app.use('/profile', authMiddleware, profileRouter);
-app.use('/people', authMiddleware, peopleRouter);
-app.use('/likes', authMiddleware, likesRouter);
-app.use('/chat', authMiddleware, chatRouter);
+app.use('/profile', authenticateJWT, profileRouter);
+app.use('/people', authenticateJWT, peopleRouter);
+app.use('/likes', authenticateJWT, likesRouter);
+app.use('/chat', authenticateJWT, chatRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

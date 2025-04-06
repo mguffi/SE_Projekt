@@ -1,25 +1,21 @@
-// routes/profil.js
 const express = require('express');
 const pool = require('../db');
+const authenticateToken = require('../middleware/auth');
 const router = express.Router();
 
-// Profilseite anzeigen
-router.get('/', async (req, res) => {
-    if (!req.session.user) {
-        return res.redirect('/login');
-    }
-
+// Profil-Seite anzeigen
+router.get('/', authenticateToken, async (req, res) => {
     try {
-        const [rows] = await pool.execute('SELECT * FROM user WHERE id = ?', [req.session.user.id]);
-        if (rows.length > 0) {
-            const user = rows[0];
-            res.render('profil', { user });
-        } else {
-            res.redirect('/login');
+        const [rows] = await pool.execute('SELECT * FROM user WHERE id = ?', [req.user.id]);
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'Benutzer nicht gefunden' });
         }
+
+        const user = rows[0];
+        res.render('profil', { user });
     } catch (err) {
-        console.error('Fehler beim Laden des Profils:', err);
-        res.render('error', { message: 'Fehler beim Laden des Profils', error: err });
+        console.error('Fehler beim Abrufen des Profils:', err);
+        res.status(500).json({ error: 'Interner Fehler' });
     }
 });
 

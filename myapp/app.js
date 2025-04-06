@@ -40,7 +40,7 @@ app.use(session({
 // Routen registrieren
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/', authRouter);
+app.use('/auth', authRouter);
 app.use('/profil', profilRouter);
 app.use('/likes', likesRouter);
 app.use('/chat', chatRouter);

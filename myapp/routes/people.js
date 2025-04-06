@@ -97,8 +97,6 @@ router.get('/matches', async (req, res) => {
             [userId, userId]
         );
 
-        console.log('Gefundene Matches:', matches);
-
         res.render('likes', { matches });
     } catch (err) {
         console.error('Fehler beim Abrufen der Matches:', err);

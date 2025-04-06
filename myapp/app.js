@@ -14,20 +14,7 @@ const peopleRouter = require('./routes/people');
 const likesRouter = require('./routes/likes');
 const chatRouter = require('./routes/chat');
 
-<<<<<<< HEAD
 const app = express();
-=======
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-// Neuer Router für Authentifizierung (Login, Signup, Logout)
-var authRouter = require('./routes/auth');
-// Router für die Profilseite
-var profilRouter = require('./routes/profil');
-const likesRouter = require('./routes/likes'); // Importiere die Likes-Route
-const peopleRouter = require('./routes/people'); // Importiere die People-Route
-const filterRouter = require('./routes/filter'); // Importiere die Filter-Route
-const chatRouter = require('./routes/chat'); // Importiere die Chat-Route
->>>>>>> 871aa86 (add chat route and update user redirection in authentication; include gender in user signup)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -89,10 +76,16 @@ app.use('/likes', authenticateJWT, likesRouter);
 app.use('/chat', authenticateJWT, chatRouter);
 =======
 app.use('/users', usersRouter);
-app.use('/', authRouter);
+app.use('/auth', require('./routes/auth'));
 app.use('/profil', profilRouter);
+<<<<<<< HEAD
 app.use('/likes', likesRouter); // Registriere die Likes-Route
 app.use('/people', peopleRouter); // Registriere die People-Route
+=======
+app.use('/likes', likesRouter);
+app.use('/chat', chatRouter);
+app.use('/people', require('./routes/people'));
+>>>>>>> bef8597 (Add user_sql.PNG image file for database query visualization)
 app.use('/filter', filterRouter); // Registriere die Filter-Route
 app.use('/chat', chatRouter); // Registriere die Chat-Route
 >>>>>>> 871aa86 (add chat route and update user redirection in authentication; include gender in user signup)

@@ -34,8 +34,13 @@ router.post('/login', async (req, res) => {
         }
         res.status(401).json({ error: 'Invalid username or password' });
     } catch (err) {
+<<<<<<< HEAD
         console.error('Login error:', err);
         res.status(500).json({ error: 'Internal server error' });
+=======
+        console.error('Fehler beim Login:', err);
+        res.status(500).json({ error: 'Interner Fehler' });
+>>>>>>> bef8597 (Add user_sql.PNG image file for database query visualization)
     }
 });
 

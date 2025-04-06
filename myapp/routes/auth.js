@@ -13,7 +13,6 @@ pool.query('SELECT 1')
 
 // Login-Route
 router.get('/login', (req, res) => {
-    // Login-Formular anzeigen
     res.render('login', { error: null });
 });
 

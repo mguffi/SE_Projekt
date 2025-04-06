@@ -25,21 +25,23 @@ router.post('/login', async (req, res) => {
             const user = rows[0];
             const match = await bcrypt.compare(password, user.password_hash);
             if (match) {
-                // JWT-Token generieren
                 const token = jwt.sign(
                     { id: user.id, name: user.name, gender: user.gender },
                     JWT_SECRET,
                     { expiresIn: '1h' }
                 );
-                return res.json({ token });
+                // Setze das Token als HttpOnly Cookie
+                res.cookie('token', token, { httpOnly: true, secure: process.env.NODE_ENV === 'production' });
+                return res.json({ message: 'Login erfolgreich' });
             }
         }
         res.status(401).json({ error: 'Falscher Benutzername oder Passwort' });
     } catch (err) {
-        console.error('Fehler beim Login:', err);
+        console.error(err);
         res.status(500).json({ error: 'Interner Fehler' });
     }
 });
+
 
 // Signup-Route
 router.get('/signup', (req, res) => {

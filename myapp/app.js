@@ -36,6 +36,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
 }));
+app.use(require('cookie-parser')());
 
 // Routen registrieren
 app.use('/', indexRouter);

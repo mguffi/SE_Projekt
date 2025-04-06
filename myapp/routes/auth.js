@@ -35,7 +35,7 @@ router.post('/login', async (req, res) => {
         }
         res.status(401).json({ error: 'Falscher Benutzername oder Passwort' });
     } catch (err) {
-        console.error(err);
+        console.error('Fehler beim Login:', err);
         res.status(500).json({ error: 'Interner Fehler' });
     }
 });

@@ -40,11 +40,11 @@ app.use(session({
 // Routen registrieren
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/', authRouter);
+app.use('/auth', require('./routes/auth'));
 app.use('/profil', profilRouter);
 app.use('/likes', likesRouter);
 app.use('/chat', chatRouter);
-app.use('/people', peopleRouter); // Registriere die People-Route
+app.use('/people', require('./routes/people'));
 app.use('/filter', filterRouter); // Registriere die Filter-Route
 
 // catch 404 and forward to error handler

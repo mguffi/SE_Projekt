@@ -24,7 +24,7 @@ router.get('/', async (req, res) => {
 
         // Gegenseitige Matches abrufen
         const [matches] = await pool.execute(
-            `SELECT u.id, u.name, u.image_url 
+            `SELECT DISTINCT u.id, u.name, u.image_url 
              FROM user u 
              INNER JOIN likes l1 ON u.id = l1.liked_user_id 
              INNER JOIN likes l2 ON l1.user_id = l2.liked_user_id 

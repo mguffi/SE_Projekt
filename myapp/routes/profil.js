@@ -26,7 +26,7 @@ router.post('/update', async (req, res) => {
 
     if (!req.session.user) {
         console.log('Benutzer nicht eingeloggt'); // Debugging-Log
-        return res.redirect('/login');
+        return res.redirect('auth/login');
     }
 
     try {

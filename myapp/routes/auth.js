@@ -24,6 +24,7 @@ router.post('/login', async (req, res) => {
             const user = rows[0];
             const match = await bcrypt.compare(password, user.password_hash);
             if (match) {
+                // JWT-Token generieren
                 const token = jwt.sign(
                     { id: user.id, name: user.name, gender: user.gender },
                     JWT_SECRET,
@@ -34,7 +35,7 @@ router.post('/login', async (req, res) => {
         }
         res.status(401).json({ error: 'Falscher Benutzername oder Passwort' });
     } catch (err) {
-        console.error(err);
+        console.error('Fehler beim Login:', err);
         res.status(500).json({ error: 'Interner Fehler' });
     }
 });

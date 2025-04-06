@@ -8,7 +8,7 @@ const JWT_SECRET = 'deinGeheimerJWTSchlüssel'; // Ersetze dies durch deinen sic
 // Middleware zur Überprüfung des JWT
 function authenticateToken(req, res, next) {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
+    const token = authHeader && authHeader.split(' ')[1]; // "Bearer <token>"
 
     if (!token) {
         return res.status(401).json({ error: 'Kein Token bereitgestellt' });
@@ -86,3 +86,37 @@ router.post('/update', async (req, res) => {
 });
 
 module.exports = router;
+
+<script>
+    async function loadProfile() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Bitte melde dich an.');
+            window.location.href = '/auth/login';
+            return;
+        }
+
+        try {
+            const response = await fetch('/profil', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Token im Header senden
+                },
+            });
+
+            if (response.ok) {
+                const html = await response.text();
+                document.body.innerHTML = html; // Profil-Seite laden
+            } else {
+                const error = await response.json();
+                alert(error.error || 'Fehler beim Laden des Profils');
+                window.location.href = '/auth/login';
+            }
+        } catch (err) {
+            console.error('Fehler beim Laden des Profils:', err);
+            alert('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.');
+        }
+    }
+
+    loadProfile();
+</script>

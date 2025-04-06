@@ -159,7 +159,8 @@ router.get('/matches', async (req, res) => {
     try {
         const userId = req.session.user.id;
 
-        // Finde Matches: Benutzer, die sich gegenseitig geliked haben
+        console.log('Abrufen der Matches für Benutzer:', userId); // Debugging
+
         const [matches] = await pool.execute(
             `SELECT u.id, u.name, u.gender, u.image_url 
              FROM user u
@@ -168,6 +169,8 @@ router.get('/matches', async (req, res) => {
              WHERE l1.user_id = ? AND l2.user_id = ?`,
             [userId, userId]
         );
+
+        console.log('Gefundene Matches:', matches); // Debugging
 
         res.render('likes', { matches });
     } catch (err) {

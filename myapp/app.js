@@ -10,13 +10,10 @@ var app = express();
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-// Neuer Router für Authentifizierung (Login, Signup, Logout)
 var authRouter = require('./routes/auth');
-// Router für die Profilseite
 var profilRouter = require('./routes/profil');
-const likesRouter = require('./routes/likes'); // Importiere die Likes-Route
-const peopleRouter = require('./routes/people'); // Importiere die People-Route
-const filterRouter = require('./routes/filter'); // Importiere die Filter-Route
+const likesRouter = require('./routes/likes');
+const peopleRouter = require('./routes/people');
 const chatRouter = require('./routes/chat'); // Importiere die Chat-Route
 
 // view engine setup
@@ -40,12 +37,11 @@ app.use(session({
 // Routen registrieren
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/auth', require('./routes/auth'));
+app.use('/auth', authRouter);
 app.use('/profil', profilRouter);
 app.use('/likes', likesRouter);
 app.use('/chat', chatRouter);
-app.use('/people', require('./routes/people'));
-app.use('/filter', filterRouter); // Registriere die Filter-Route
+app.use('/people', peopleRouter); // Entferne die Filter-Route
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -54,11 +50,9 @@ app.use(function(req, res, next) {
 
 // Error-Handler
 app.use(function (err, req, res, next) {
-    // Set locals, only providing error in development
     res.locals.message = err.message || 'Ein Fehler ist aufgetreten';
     res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-    // Render the error page
     res.status(err.status || 500);
     res.render('error', { message: res.locals.message, error: res.locals.error });
 });

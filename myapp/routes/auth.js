@@ -18,18 +18,24 @@ router.get('/login', (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
+    console.log('Login-Anfrage erhalten:', req.body); // Debugging
     const { username, password } = req.body;
     try {
         const [rows] = await pool.execute('SELECT * FROM user WHERE name = ?', [username]);
+        console.log('Benutzer gefunden:', rows); // Debugging
+
         if (rows.length > 0) {
             const user = rows[0];
             const match = await bcrypt.compare(password, user.password_hash);
+            console.log('Passwortvergleich:', match); // Debugging
+
             if (match) {
                 const token = jwt.sign(
                     { id: user.id, name: user.name, gender: user.gender },
                     JWT_SECRET,
                     { expiresIn: '1h' }
                 );
+                console.log('Token erstellt:', token); // Debugging
                 return res.json({ token });
             }
         }

@@ -42,6 +42,37 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// Login-Funktion
+async function login(username, password) {
+    try {
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password }),
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            console.error('Login fehlgeschlagen:', error.error);
+            alert('Login fehlgeschlagen: ' + error.error);
+            return;
+        }
+
+        const data = await response.json();
+        console.log('Login erfolgreich:', data);
+
+        // Token im Local Storage speichern
+        localStorage.setItem('token', data.token);
+
+        // Weiterleitung zur geschützten Seite
+        window.location.href = '/protected';
+    } catch (err) {
+        console.error('Fehler beim Login:', err);
+    }
+}
+
 // Signup-Route
 router.get('/signup', (req, res) => {
     // Registrierungsformular anzeigen

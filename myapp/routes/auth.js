@@ -25,14 +25,12 @@ router.post('/login', async (req, res) => {
             const user = rows[0];
             const match = await bcrypt.compare(password, user.password_hash);
             if (match) {
-                // JWT erstellen
                 const token = jwt.sign(
                     { id: user.id, name: user.name, gender: user.gender },
                     JWT_SECRET,
-                    { expiresIn: '1h' } // Token läuft nach 1 Stunde ab
+                    { expiresIn: '1h' }
                 );
-
-                return res.json({ token }); // Token an den Client senden
+                return res.json({ token });
             }
         }
         res.status(401).json({ error: 'Falscher Benutzername oder Passwort' });
@@ -44,6 +42,7 @@ router.post('/login', async (req, res) => {
 
 // Login-Funktion
 async function login(username, password) {
+    console.log('Login-Daten:', { username, password }); // Debugging
     try {
         const response = await fetch('/login', {
             method: 'POST',
@@ -52,6 +51,8 @@ async function login(username, password) {
             },
             body: JSON.stringify({ username, password }),
         });
+
+        console.log('Antwortstatus:', response.status); // Debugging
 
         if (!response.ok) {
             const error = await response.json();

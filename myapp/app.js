@@ -69,7 +69,7 @@ const authenticateJWT = (req, res, next) => {
 // Routen
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
-app.use('/profile', authenticateJWT, profileRouter);
+app.use('/profile', profileRouter);
 app.use('/people', authenticateJWT, peopleRouter);
 app.use('/likes', authenticateJWT, likesRouter);
 app.use('/chat', authenticateJWT, chatRouter);

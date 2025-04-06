@@ -30,6 +30,12 @@
             <p class="text-center">Du hast noch keine Likes.</p>
         <% } %>
 
+        <div class="text-center mt-4">
+            <form action="/likes/reset" method="POST">
+                <button type="submit" class="btn btn-danger">Alle Likes zurücksetzen</button>
+            </form>
+        </div>
+
         <h2 class="text-center mt-5">Deine Matches</h2>
         <% if (matches.length > 0) { %>
             <div class="row">
